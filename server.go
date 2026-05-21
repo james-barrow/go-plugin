@@ -15,7 +15,6 @@ import (
 	"os"
 	"os/signal"
 	"os/user"
-	"runtime"
 	"sort"
 	"strconv"
 	"strings"
@@ -525,12 +524,9 @@ func Serve(opts *ServeConfig) {
 	}
 }
 
-func serverListener(unixSocketCfg UnixSocketConfig) (net.Listener, error) {
-	if runtime.GOOS == "windows" {
-		return serverListener_tcp()
-	}
-
-	return serverListener_unix(unixSocketCfg)
+func serverListener(_ UnixSocketConfig) (net.Listener, error) {
+	// testing out forcing TCP connections to make debugging reattached plugins via docker easier
+	return serverListener_tcp()
 }
 
 func serverListener_tcp() (net.Listener, error) {
